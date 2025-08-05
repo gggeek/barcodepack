@@ -1,7 +1,7 @@
 {
   "name": "gggeek/barcodepack",
   "description": "BarcodePack is PHP library which allows you to generate the most common types of barcodes",
-  "license": "GPL-2.0-or-later",
+  "license": "CC-BY-3.0",
   "keywords": [
 	"barcode"
   ],

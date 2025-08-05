@@ -15,11 +15,17 @@ BarcodePack support the following types of barcodes:
 * Interleaved Code 2 of 5
 * Standard Code 2 of 5
 
+## Requirements
+
+The php GD extension
+
 ## Installation
 
 Use Composer to install this library
 
 ## Usage
+
+Example:
 
 ```php
 <?php
@@ -28,7 +34,7 @@ Use Composer to install this library
 include 'vendor/autoload.php';
 
 // Make new instance of QR Code class
-$qr = new qrCode('Hello World!', 5);
+$qr = new \BarcodePack\qrCode('Hello World!', 5);
 
 // We will outputting a PNG image
 header('Content-type: image/png');
@@ -36,6 +42,7 @@ header('Content-type: image/png');
 // Call draw method and output image
 imagepng(($qr->draw());
 ```
+
 ## License
 
-Creative Commons Attribution-NoDerivs 3.0 Unported License
+Creative Commons Attribution-NoDerivs 3.0 Unported License - see https://creativecommons.org/licenses/by-nd/3.0/
