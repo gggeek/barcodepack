@@ -100,7 +100,7 @@ class ean13 extends linearBarcode
 		$saveTo = 'DATA';
 
 		// Parity determine
-		$parity = $this->parity[$this->text{0}];
+		$parity = $this->parity[$this->text[0]];
 
 		$biteCode['START'] = $this->codeTable['START'];
 
@@ -174,7 +174,7 @@ class ean13 extends linearBarcode
 			imagecopy($im2, $im, $margin, 0, 0, 0, $this->getBarcodeLen()*$this->moduleSize+(2*$margin), $this->height+$this->fontSize+(2*$margin));
 
 			// Divide text into three parts and each insert to the different place
-			$charsA = $this->text{0};	// first char
+			$charsA = $this->text[0];	// first char
 			for($i=1;$i<=strlen($this->text);$i++) {
 				if($i<=6) {
 					$charsB .= $this->text[$i];

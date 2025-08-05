@@ -101,7 +101,7 @@ class upc extends linearBarcode
 		$saveTo = 'DATA';
 
 		// Parity determine
-		$parity = $this->parity[$this->text{0}];
+		$parity = $this->parity[$this->text[0]];
 
 		$biteCode['START'] = $this->codeTable['START'];
 
