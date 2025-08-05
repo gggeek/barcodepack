@@ -7,19 +7,17 @@
  * a Creative Commons Attribution-NoDerivs 3.0 Unported License.
  */
 
-
-
-require_once 'class.linearBarcode.php';
+namespace BarcodePack;
 
 /**
  * Code 128
  * Class implements Code 128 barcode
- * 
+ *
  * @author Tomáš Horáček <info@webpack.cz>
  * @package BarcodePack
  */
-class code128 extends linearBarcode {
-
+class code128 extends linearBarcode
+{
 	// Code sets
 	const CHARSET_A = 'A';
 	const CHARSET_B = 'B';
@@ -166,17 +164,17 @@ class code128 extends linearBarcode {
 		'11000111010',	// 106 STOP
 		'11'			// 107 Termination bar
 	);
-	
+
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param string $text
 	 * @param int $moduleSize
 	 */
 	public function  __construct($text, $moduleSize=2)
 	{
-		try {	
+		try {
 			// Fill set A
 			for($i=32; $i<=95; $i++) {
 				// chars SPACE - UNDERSPACE
@@ -199,8 +197,8 @@ class code128 extends linearBarcode {
 				$this->charsB .= chr($i);
 				$allowedChars[] = chr($i);
 			}
-			
-			
+
+
 			parent::__construct($text, $moduleSize, $allowedChars);
 
 
@@ -209,7 +207,7 @@ class code128 extends linearBarcode {
 		} catch (Exception $e) {
 			throw $e;
 		}
-		
+
 	}
 
 
@@ -247,7 +245,7 @@ class code128 extends linearBarcode {
 			$characterSet = self::CHARSET_A;
 			$weightedSum += self::START_A;
 		} else {
-			throw new Exception();
+			throw new \Exception();
 		}
 
 
@@ -267,15 +265,15 @@ class code128 extends linearBarcode {
 				case 'C':
 					$characterValue = intval($this->text{$i}.$this->text{$i+1});
 					$biteCode['DATA'] .= $this->codeTable[$characterValue];
-					$i++;		
+					$i++;
 					break;
 
 				default:
 					break;
 			}
-			
+
 			$weightedSum += $characterValue*$checksumCounter;
-			$checksumCounter++;	
+			$checksumCounter++;
 
 			// find next char set.
 			if(strlen($this->text) > ($i+2) && is_numeric($this->text{$i+1}) && is_numeric($this->text{$i+2})) {
@@ -283,7 +281,7 @@ class code128 extends linearBarcode {
 					$characterValue = 99;
 					$biteCode['DATA'] .= $this->codeTable[$characterValue];
 					$weightedSum += $characterValue*$checksumCounter;
-					$checksumCounter++;	
+					$checksumCounter++;
 				}
 				$characterSet = 'C';
 			} else if(isset($this->text{$i+1})) {
@@ -296,7 +294,7 @@ class code128 extends linearBarcode {
 						$characterValue = 100;
 					}
 					$weightedSum += $characterValue*$checksumCounter;
-					$checksumCounter++;	
+					$checksumCounter++;
 					$biteCode['DATA'] .= $this->codeTable[$characterValue];
 				}
 				$characterSet = $newCharacterSet;
@@ -305,7 +303,7 @@ class code128 extends linearBarcode {
 
 		// Count the checksum
 		$checkSum = (int) $weightedSum%103;
-		
+
 		// Add the checksum
 		$biteCode['DATA'] .= $this->codeTable[$checkSum];
 
@@ -322,7 +320,7 @@ class code128 extends linearBarcode {
 	/**
 	 * Find Character Set
 	 * Find correct character set depends on imput char
-	 * 
+	 *
 	 * @param char $char
 	 * @return char
 	 */
@@ -334,5 +332,4 @@ class code128 extends linearBarcode {
 			return self::CHARSET_A;
 		}
 	}
-
 }

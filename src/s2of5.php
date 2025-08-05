@@ -7,25 +7,22 @@
  * a Creative Commons Attribution-NoDerivs 3.0 Unported License.
  */
 
-
-
-require_once 'class.linearBarcode.php';
+namespace BarcodePack;
 
 /**
  * s2of5
- * 
+ *
  * Standard 2/5 (Interleaved 2/5)
- * 
+ *
  * @author Tomáš Horáček <info@webpack.cz>
  * @package BarcodePack
  */
-class s2of5 extends linearBarcode {
-
+class s2of5 extends linearBarcode
+{
 	/** @var array */
 	private $allowedChars = array(
 		'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
 	);
-
 
 	/**
 	 * Coding table
@@ -46,17 +43,17 @@ class s2of5 extends linearBarcode {
 		'START' => '1110111010',
 		'STOP' => '111010111',
 	);
-	
+
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param string $text
 	 * @param int $modulesize
 	 */
 	public function  __construct($text, $moduleSize)
 	{
-		
+
 		try {
 			parent::__construct($text, $moduleSize, $this->allowedChars);
 
@@ -64,7 +61,7 @@ class s2of5 extends linearBarcode {
 		}
 		catch(Exception $e) {
 			throw $e;
-		}	
+		}
 	}
 
 
@@ -91,5 +88,4 @@ class s2of5 extends linearBarcode {
 
 		return $biteCode;
 	}
-
 }
