@@ -34,7 +34,6 @@ class code128 extends linearBarcode
 	const CODE_B = 100;
 	const CODE_C = 99;
 
-
 	private $setA = array();
 	private $setB = array();
 	private $setC = array();
@@ -165,7 +164,6 @@ class code128 extends linearBarcode
 		'11'			// 107 Termination bar
 	);
 
-
 	/**
 	 * Constructor
 	 *
@@ -183,7 +181,7 @@ class code128 extends linearBarcode
 				$allowedChars[] = chr($i);
 			}
 			for($i=0; $i<=31; $i++) {
-				// chars NUL - US (Unit seperator)
+				// chars NUL - US (Unit separator)
 				$this->setA[$i] = $i + 64;
 				$this->charsA .= chr($i);
 				$allowedChars[] = chr($i);
@@ -198,24 +196,20 @@ class code128 extends linearBarcode
 				$allowedChars[] = chr($i);
 			}
 
-
 			parent::__construct($text, $moduleSize, $allowedChars);
-
 
 			$this->biteCode = $this->createBiteCode();
 
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			throw $e;
 		}
 
 	}
 
-
 	/**
 	 * Create Bite Code
 	 *
-	 *
-	 * @return string
+	 * @return array
 	 */
 	private function createBiteCode()
 	{
@@ -228,18 +222,18 @@ class code128 extends linearBarcode
 
 		$biteCode['DATA'] = '';
 		// Find start character
-		if(strlen($this->text)>=2 && is_numeric($this->text{0}) && is_numeric($this->text{1})) {
+		if(strlen($this->text)>=2 && is_numeric($this->text[0]) && is_numeric($this->text[1])) {
 			// If the first and second characters are numeric use character set C
 			// and insert START_C char
 			$biteCode['DATA'] .= $this->codeTable[self::START_C];
 			$characterSet = self::CHARSET_C;
 			$weightedSum += self::START_C;
-		} else if (strpos ($this->charsB, $this->text{0})) {
+		} else if (strpos ($this->charsB, $this->text[0])) {
 			// Character set B
 			$biteCode['DATA'] .= $this->codeTable[self::START_B];
 			$characterSet = self::CHARSET_B;
 			$weightedSum += self::START_B;
-		} else if (strpos ($this->charsA, $this->text{0})) {
+		} else if (strpos ($this->charsA, $this->text[0])) {
 			// Character set A
 			$biteCode['DATA'] .= $this->codeTable[self::START_A];
 			$characterSet = self::CHARSET_A;
@@ -248,22 +242,21 @@ class code128 extends linearBarcode
 			throw new \Exception();
 		}
 
-
 		for($i=0;$i<strlen($this->text);$i++) {
 			switch ($characterSet) {
 				case 'B':
 					// Character set B is default, so it is first
-					$characterValue = $this->setB[ord($this->text{$i})];
+					$characterValue = $this->setB[ord($this->text[$i])];
 					$biteCode['DATA'] .= $this->codeTable[$characterValue];
 					break;
 
 				case 'A':
-					$characterValue = $this->setA[ord($this->text{$i})];
+					$characterValue = $this->setA[ord($this->text[$i])];
 					$biteCode['DATA'] .= $this->codeTable[$characterValue];
 					break;
 
 				case 'C':
-					$characterValue = intval($this->text{$i}.$this->text{$i+1});
+					$characterValue = intval($this->text[$i].$this->text[$i+1]);
 					$biteCode['DATA'] .= $this->codeTable[$characterValue];
 					$i++;
 					break;
@@ -276,7 +269,7 @@ class code128 extends linearBarcode
 			$checksumCounter++;
 
 			// find next char set.
-			if(strlen($this->text) > ($i+2) && is_numeric($this->text{$i+1}) && is_numeric($this->text{$i+2})) {
+			if(strlen($this->text) > ($i+2) && is_numeric($this->text[$i+1]) && is_numeric($this->text[$i+2])) {
 				if($characterSet!=self::CHARSET_C) {
 					$characterValue = 99;
 					$biteCode['DATA'] .= $this->codeTable[$characterValue];
@@ -284,8 +277,8 @@ class code128 extends linearBarcode
 					$checksumCounter++;
 				}
 				$characterSet = 'C';
-			} else if(isset($this->text{$i+1})) {
-				$newCharacterSet = $this->findCharacterSet($this->text{$i+1});
+			} else if(isset($this->text[$i+1])) {
+				$newCharacterSet = $this->findCharacterSet($this->text[$i+1]);
 				if($characterSet==self::CHARSET_C) {
 					if($newCharacterSet==self::CHARSET_A) {
 						$characterValue = 101;
@@ -316,13 +309,12 @@ class code128 extends linearBarcode
 		return $biteCode;
 	}
 
-
 	/**
 	 * Find Character Set
-	 * Find correct character set depends on imput char
+	 * Find correct character set depends on input char
 	 *
-	 * @param char $char
-	 * @return char
+	 * @param string $char
+	 * @return string
 	 */
 	private function findCharacterSet($char) {
 		if(strpos($this->charsB, $char)!==false) {

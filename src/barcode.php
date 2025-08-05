@@ -13,7 +13,6 @@ namespace BarcodePack;
 define('E_EMPTY_TEXT', 100);
 define('E_MODULE_SIZE', 101);
 
-
 /**
  * barcode
  *
@@ -53,7 +52,6 @@ class barcode
 	 */
 	public function __construct($text, $moduleSize=self::MODULE_SIZE)
 	{
-
 		// input text check
 		if(!empty ($text)) {
 			$this->text = $text;

@@ -44,7 +44,6 @@ class s2of5 extends linearBarcode
 		'STOP' => '111010111',
 	);
 
-
 	/**
 	 * Constructor
 	 *
@@ -53,22 +52,20 @@ class s2of5 extends linearBarcode
 	 */
 	public function  __construct($text, $moduleSize)
 	{
-
 		try {
 			parent::__construct($text, $moduleSize, $this->allowedChars);
 
 			$this->biteCode = $this->createBiteCode();
 		}
-		catch(Exception $e) {
+		catch(\Exception $e) {
 			throw $e;
 		}
 	}
 
-
 	/**
 	 * Create Bite Code
 	 *
-	 * @return string
+	 * @return array
 	 */
 	private function createBiteCode()
 	{
@@ -80,7 +77,7 @@ class s2of5 extends linearBarcode
 		// Input data encode
 		$biteCode['DATA'] = '';
 		for($i=0;$i<strlen($this->text);$i++) {
-			$biteCode['DATA'] .= $this->codeTable[$this->text{$i}];
+			$biteCode['DATA'] .= $this->codeTable[$this->text[$i]];
 		}
 
 		// STOP char

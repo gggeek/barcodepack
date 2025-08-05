@@ -39,7 +39,6 @@ class ean13 extends linearBarcode
 		'9' => 'LGGLGLRRRRRR',
 	);
 
-
 	/**
 	 * Zero represents white line
 	 * One represents black line
@@ -65,7 +64,6 @@ class ean13 extends linearBarcode
 		'STOP' => '101',
 	);
 
-
 	/**
 	 * Constructor
 	 *
@@ -89,12 +87,11 @@ class ean13 extends linearBarcode
 
 	}
 
-
 	/**
 	 * Create Bite Code
 	 * Create bitecode where 1 represents dark module and 0 white module.
 	 *
-	 * @return string
+	 * @return array
 	 */
 	private function createBiteCode()
 	{
@@ -108,7 +105,7 @@ class ean13 extends linearBarcode
 		$biteCode['START'] = $this->codeTable['START'];
 
 		for($i=1;$i<strlen($this->text);$i++) {
-			$biteCode[$saveTo] .= $this->codeTable[$this->text{$i}][$parity{$i-1}];
+			$biteCode[$saveTo] .= $this->codeTable[$this->text[$i]][$parity{$i-1}];
 			if($i==6) {
 				$biteCode['SEPARATOR'] = $this->codeTable['SEPARATOR'];
 				$saveTo = 'DATA2';
@@ -126,7 +123,6 @@ class ean13 extends linearBarcode
 
 		return $biteCode;
 	}
-
 
 	/**
 	 * Checksum
@@ -153,39 +149,37 @@ class ean13 extends linearBarcode
 		return ceil($sum/10)*10 - $sum;
 	}
 
-
 	/**
 	 * Draw
 	 * Add text into barcode
 	 *
 	 * @param bool $showText
-	 * @return image resource
+	 * @return \GdImage|resource resource
 	 */
-	public function draw($showText = true) {
+	public function draw($showText = true)
+	{
 		$im = parent::draw(false);
 
 		$margin = $this->margin*$this->moduleSize;
 
-
 		$white = Imagecolorallocate ($im,255,255,255);
 		$black = Imagecolorallocate ($im,0,0,0);
-
 
 		if($showText) {
 
 			// Increase space between symbol 2x
-			$im2 = ImageCreate($this->getBarcodeLen()*$this->moduleSize+(2*$margin)+$margin,
+			$im2 = imagecreate($this->getBarcodeLen()*$this->moduleSize+(2*$margin)+$margin,
 				$this->height+$this->fontSize+(2*$margin));
 
 			imagecopy($im2, $im, $margin, 0, 0, 0, $this->getBarcodeLen()*$this->moduleSize+(2*$margin), $this->height+$this->fontSize+(2*$margin));
 
-			// Divide text into three parts and each insert to the diffrerent place
+			// Divide text into three parts and each insert to the different place
 			$charsA = $this->text{0};	// first char
 			for($i=1;$i<=strlen($this->text);$i++) {
 				if($i<=6) {
-					$charsB .= $this->text{$i};
+					$charsB .= $this->text[$i];
 				} else {
-					$charsC .= $this->text{$i};
+					$charsC .= $this->text[$i];
 				}
 			}
 

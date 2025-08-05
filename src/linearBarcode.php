@@ -42,6 +42,7 @@ class linearBarcode extends barcode
 	 *
 	 * @param string $text
 	 * @param int $modulesize
+	 * @param null|string $allowedChars
 	 */
 	public function __construct($text, $moduleSize=2, $allowedChars=null)
 	{
@@ -52,11 +53,10 @@ class linearBarcode extends barcode
 				$this->checkAllowedChars($text, $allowedChars);
 			}
 
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			throw $e;
 		}
 	}
-
 
 	/**
 	 * Check Allowed Chars
@@ -68,15 +68,13 @@ class linearBarcode extends barcode
 	protected function checkAllowedChars($text, $allowedChars)
 	{
 		for($i=0; $i<strlen($text); $i++) {
-			if(!in_array($text{$i}, $allowedChars)) {
-				throw new \Exception('Input text contains nonallowed characters.', E_BAD_CHARS);
+			if(!in_array($text[$i], $allowedChars)) {
+				throw new \Exception('Input text contains non-allowed characters.', E_BAD_CHARS);
 				//return false;
 			}
 		}
 		return true;
 	}
-
-
 
 	/**
 	 * Get Barcode Length
@@ -90,25 +88,23 @@ class linearBarcode extends barcode
 		return $len;
 	}
 
-
 	/**
 	 * Draw
 	 * Create image with barcode
 	 *
 	 * @param bool $showText
-	 * @return image resource
+	 * @return \GdImage|resource resource
 	 */
 	public function draw($showText=true)
 	{
 		// Image create
 		$margin = $this->margin*$this->moduleSize;
 		$im = ImageCreate($this->getBarcodeLen()*$this->moduleSize+(2*$margin),
-				$this->height+$this->fontSize+(2*$margin));
+			$this->height+$this->fontSize+(2*$margin));
 
 		// Color set
 		$white = Imagecolorallocate ($im,255,255,255);
 		$black = Imagecolorallocate ($im,0,0,0);
-
 
 		// Draw lines
 		$pos = 0;
@@ -118,7 +114,7 @@ class linearBarcode extends barcode
 				case 'DATA2':
 					// Data
 					for($i=0;$i<strlen($values);$i++) {
-						$color = (($values{$i})=='1') ? $black : $white;
+						$color = (($values[$i])=='1') ? $black : $white;
 						imagefilledrectangle($im, $pos*$this->moduleSize+$margin, $margin,
 								($pos+1)*$this->moduleSize+$margin,
 								$this->height-5*$this->moduleSize+$margin, $color);
@@ -130,7 +126,7 @@ class linearBarcode extends barcode
 					// will be longer
 					for($i=0;$i<strlen($values);$i++) {
 
-						$color = (($values{$i})=='1') ? $black : $white;
+						$color = (($values[$i])=='1') ? $black : $white;
 						imagefilledrectangle($im, $pos*$this->moduleSize+$margin, $margin,
 								($pos+1)*$this->moduleSize+$margin, $this->height+$margin,
 								$color);
@@ -145,13 +141,12 @@ class linearBarcode extends barcode
 		if($showText) {
 			$textWidth = ImageFontWidth($this->fontSize)*strlen($this->text);
 			imagestring ($im, $this->fontSize,
-					$this->getBarcodeLen()*$this->moduleSize/2-$textWidth/2+$margin,
-					$this->height-$this->fontSize/2+$margin, $this->text, $black);
+				$this->getBarcodeLen()*$this->moduleSize/2-$textWidth/2+$margin,
+				$this->height-$this->fontSize/2+$margin, $this->text, $black);
 		}
 
 		return $im;
 	}
-
 
 	/**
 	 * Raw Data

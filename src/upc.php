@@ -39,7 +39,6 @@ class upc extends linearBarcode
 		'9' => 'LGGLGLRRRRRR',
 	);
 
-
 	/**
 	 * Zero represents white line
 	 * One represents black line
@@ -65,7 +64,6 @@ class upc extends linearBarcode
 		'STOP' => '101',
 	);
 
-
 	/**
 	 * Constructor
 	 *
@@ -81,22 +79,20 @@ class upc extends linearBarcode
 				throw new \Exception('Chyba: Délka musí být 11 znaků.', E_BAD_UPC_LENGTH);
 			}
 
-			// Add zero to the beginnign of code (compatibility with EAN)
+			// Add zero to the beginning of code (compatibility with EAN)
 			$this->text = '0'.$this->text;
 
 			$this->biteCode = $this->createBiteCode();
 		}
-		catch(Exception $e) {
+		catch(\Exception $e) {
 			throw $e;
 		}
-
 	}
-
 
 	/**
 	 * Create Bite Code
 	 *
-	 * @return string
+	 * @return array
 	 */
 	private function createBiteCode()
 	{
@@ -110,7 +106,7 @@ class upc extends linearBarcode
 		$biteCode['START'] = $this->codeTable['START'];
 
 		for($i=1;$i<strlen($this->text);$i++) {
-			$biteCode[$saveTo] .= $this->codeTable[$this->text{$i}][$parity{$i-1}];
+			$biteCode[$saveTo] .= $this->codeTable[$this->text[$i]][$parity[$i-1]];
 			if($i==6) {
 				$biteCode['SEPARATOR'] = $this->codeTable['SEPARATOR'];
 				$saveTo = 'DATA2';
@@ -129,7 +125,6 @@ class upc extends linearBarcode
 		return $biteCode;
 	}
 
-
 	/**
 	 * Checksum
 	 *
@@ -143,9 +138,9 @@ class upc extends linearBarcode
 
 		for($i=1;$i<=strlen($text);$i++) {
 			if($i%2==0) {
-				$evensum += (int) $text{$i-1};
+				$evensum += (int) $text[$i-1];
 			} else {
-				$oddsum += (int) $text{$i-1};
+				$oddsum += (int) $text[$i-1];
 			}
 		}
 
@@ -154,22 +149,19 @@ class upc extends linearBarcode
 		return ceil($sum/10)*10 - $sum;
 	}
 
-
 	/**
 	 * Draw
 	 *
 	 * @param bool $showText
-	 * @return image resource
+	 * @return \GdImage|resource resource
 	 */
 	public function draw($showText = true) {
 		$im = parent::draw(false);
 
 		$margin = $this->margin*$this->moduleSize;
 
-
 		$white = Imagecolorallocate ($im,255,255,255);
 		$black = Imagecolorallocate ($im,0,0,0);
-
 
 		if($showText) {
 
@@ -178,15 +170,14 @@ class upc extends linearBarcode
 
 			imagecopy($im2, $im, $margin, 0, 0, 0, $this->getBarcodeLen()*$this->moduleSize+(2*$margin), $this->height+$this->fontSize+(2*$margin));
 
-			$charsA = $this->text{0};
+			$charsA = $this->text[0];
 			for($i=1;$i<=strlen($this->text);$i++) {
 				if($i<=6) {
-					$charsB .= $this->text{$i};
+					$charsB .= $this->text[$i];
 				} else {
-					$charsC .= $this->text{$i};
+					$charsC .= $this->text[$i];
 				}
 			}
-
 
 			$textWidth = ImageFontWidth($this->fontSize)*strlen($charsB);
 			imagestring ($im2, $this->fontSize,

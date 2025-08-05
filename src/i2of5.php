@@ -47,7 +47,6 @@ class i2of5 extends linearBarcode
 		'STOP' => '11101',
 	);
 
-
 	/**
 	 * Constructor
 	 *
@@ -71,11 +70,10 @@ class i2of5 extends linearBarcode
 
 	}
 
-
 	/**
 	 * Create Bite Code
 	 *
-	 * @return string
+	 * @return array
 	 */
 	private function createBiteCode()
 	{
@@ -85,7 +83,6 @@ class i2of5 extends linearBarcode
 		$biteCode['START'] = $this->codeTable['START'];
 
 		$biteCode['DATA'] = '';
-
 
 		for($i=0;$i<strlen($this->text);$i++) {
 			$firstCounter = 0;	// Num of line module
@@ -97,7 +94,7 @@ class i2of5 extends linearBarcode
 				// Encode first char into lines
 				$bars = true;
 				while($bars && $firstCounter<13) {
-					if($this->codeTable[$this->text{$i}]{$firstCounter}=="1") {
+					if($this->codeTable[$this->text[$i]][$firstCounter]=="1") {
 						$biteCode['DATA'] .= '1';	// line
 					} else {
 						$bars = false;
@@ -108,7 +105,7 @@ class i2of5 extends linearBarcode
 				// Second char is encoded to spaces
 				$spaces = true;
 				while($spaces && $secondCounter<13) {
-					if($this->codeTable[$this->text{$i+1}]{$secondCounter}=='1') {
+					if($this->codeTable[$this->text[$i+1]][$secondCounter]=='1') {
 						$biteCode['DATA'] .= '0';	// space
 						$secondCounter++;
 					} else {
