@@ -40,7 +40,7 @@ $qr = new \BarcodePack\qrCode('Hello World!', 5);
 header('Content-type: image/png');
 
 // Call draw method and output image
-imagepng(($qr->draw());
+imagepng($qr->draw());
 ```
 
 ## License
